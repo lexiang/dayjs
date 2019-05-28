@@ -12,12 +12,13 @@ export default (o, c, d) => {
     LLLL: 'dddd, MMMM D, YYYY h:mm A'
   }
   d.en.formats = englishFormats
-  proto.format = function (formatStr) {
-    const locale = this.$locale()
-    const formats = locale.formats || {}
-    const str = formatStr || FORMAT_DEFAULT
-    const result = str.replace(/LTS|LT|L{1,4}/g, match =>
-      formats[match] || englishFormats[match])
+  const t = format => format.replace(/(\[[^\]]+])|(MMMM|MM|DD|dddd)/g, (_, a, b) => a || b.slice(1))
+  proto.format = function (formatStr = FORMAT_DEFAULT) {
+    const { formats = {} } = this.$locale()
+    const result = formatStr.replace(/(\[[^\]]+])|(LTS?|l{1,4}|L{1,4})/g, (_, a, b) => {
+      const B = b && b.toUpperCase()
+      return a || formats[b] || englishFormats[b] || t(formats[B])
+    })
     return oldFormat.call(this, result)
   }
 }

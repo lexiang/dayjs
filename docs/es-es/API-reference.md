@@ -23,8 +23,9 @@ El objeto `Dayjs` es inmutable, por lo que toda operación de la API que altere 
     - [Minuto `.minute()`](#minuto-minute)
     - [Segundo `.second()`](#segundo-second)
     - [Milisegundo `.millisecond()`](#milisegundo-millisecond)
-    - [Set `.set(unit: string, value: number)`](#set-setunit-string-value-number)
+    - [Get `.get(unit: string)`](#get-getunit-string)
       - [Lista de unidades disponibles](#lista-de-unidades-disponibles)
+    - [Set `.set(unit: string, value: number)`](#set-setunit-string-value-number)
   - [Manipulación](#manipulación)
     - [Añadir `.add(value: number, unit: string)`](#añadir-addvalue-number-unit-string)
     - [Restar `.subtract(value: number, unit: string)`](#restar-subtractvalue-number-unit-string)
@@ -39,24 +40,16 @@ El objeto `Dayjs` es inmutable, por lo que toda operación de la API que altere 
     - [UTC offset (minutos) `.utcOffset()`](#utc-offset-minutos-utcoffset)
     - [Días en el mes `.daysInMonth()`](#días-en-el-mes-daysinmonth)
     - [Como objeto `Date` `.toDate()`](#como-objeto-date-todate)
-    - [Como array `.toArray()`](#como-array-toarray)
     - [Como JSON `.toJSON()`](#como-json-tojson)
     - [Como cadena ISO 8601 `.toISOString()`](#como-cadena-iso-8601-toisostring)
-    - [Como objeto `.toObject()`](#como-objecto-toobject)
     - [Como cadena `.toString()`](#como-cadena-tostring)
   - [Consulta](#consulta)
     - [Anterior a `.isBefore(compared: Dayjs, unit?: string)`](#anterior-a-isbeforecompared-dayjs-unit-string)
     - [Igual que `.isSame(compared: Dayjs, unit?: string)`](#igual-que-issamecompared-dayjs-unit-string)
     - [Posterior a `.isAfter(compared: Dayjs, unit?: string)`](#posterior-a-isaftercompared-dayjs-unit-string)
     - [Es Dayjs `.isDayjs()`](#es-dayjs-isdayjscompared-any)
+  - [UTC](#utc)
   - [API de complementos](#api-de-complementos)
-    - [RelativeTime](#relativetime)
-    - [IsLeapYear](#isleapyear)
-    - [WeekOfYear](#weekofyear)
-    - [IsSameOrAfter](#issameorafter)
-    - [IsSameOrBefore](#issameorbefore)
-    - [IsBetween](#isbetween)
-    - [QuarterOfYear](#quarterofyear)
 
 ## Análisis
 
@@ -124,66 +117,83 @@ dayjs().isValid()
 
 ### Año `.year()`
 
-Devuelve un dato de tipo `number`, que representa el año del objeto `Dayjs`.
+Gets or sets the year.
 
 ```js
 dayjs().year()
+dayjs().year(2000)
 ```
 
 ### Mes `.month()`
 
-Devuelve un dato de tipo `number`, que representa el mes del objeto `Dayjs`. Se cuenta desde 0, que se corresponde con enero.
+Gets or sets the month. Starts at 0
 
 ```js
 dayjs().month()
+dayjs().month(0)
 ```
 
 ### Día del mes `.date()`
 
-Devuelve un dato de tipo `number`, que indica el día del mes del objeto `Dayjs`. Empieza por el día 1.
+Gets or sets the day of the month. Starts at 1
 
 ```js
 dayjs().date()
+dayjs().date(1)
 ```
 
 ### Día de la semana `.day()`
 
-Devuelve un dato de tipo `number`, que indica el día de la semana del objeto `Dayjs`. Se cuenta desde 0, que se corresponde con el domingo.
+Gets or sets the day of the week. Starts on Sunday with 0
 
 ```js
 dayjs().day()
+dayjs().day(0)
 ```
 
 ### Hora `.hour()`
 
-Devuelve un dato de tipo `number`, que indica la hora del objeto `Dayjs`.
+Gets or sets the hour.
 
 ```js
 dayjs().hour()
+dayjs().hour(12)
 ```
 
 ### Minuto `.minute()`
 
-Devuelve un dato de tipo `number`, que indica los minutos del objeto `Dayjs`.
+Gets or sets the minute.
 
 ```js
 dayjs().minute()
+dayjs().minute(59)
 ```
 
 ### Segundo `.second()`
 
-Devuelve un dato de tipo `number`, que indica los segundos del objeto `Dayjs`.
+Gets or sets the second.
 
 ```js
 dayjs().second()
+dayjs().second(1)
 ```
 
 ### Milisegundo `.millisecond()`
 
-Devuelve un dato de tipo `number`, que indica los milisegundos del objeto `Dayjs`.
+Gets or sets the millisecond.
 
 ```js
 dayjs().millisecond()
+dayjs().millisecond(1)
+```
+
+### Get `.get(unit: string)`
+
+Returns a `number` with information getting from `Dayjs` object
+
+```js
+dayjs().get('month') // start 0
+dayjs().get('day')
 ```
 
 ### Set `.set(unit: string, value: number)`
@@ -202,7 +212,7 @@ dayjs().set('second', 30)
 | ------------- | ----------- | ------------------------------------------- |
 | `date`        |             | Día del mes                                 |
 | `day`         | `d`         | Día de la semana (de domingo 0, a sábado 6) |
-| `month`       | `M`         | Mes                                         |
+| `month`       | `M`         | Mes (January as 0, December as 11)          |
 | `year`        | `y`         | Año                                         |
 | `hour`        | `h`         | Hora                                        |
 | `minute`      | `m`         | Minuto                                      |
@@ -260,7 +270,7 @@ Devuelve un dato de tipo `string` con la fecha del objeto `Dayjs` formateada.
 Para escapar caracteres, estos se han de encerrar entre corchetes (p.ej.: `[A] [MM]`).
 
 ```js
-dayjs().format() // fecha actual en ISO6801, sin fracciones de segundo p.ej. '2020-04-02T08:02:17-05:00'
+dayjs().format() // fecha actual en ISO8601, sin fracciones de segundo p.ej. '2020-04-02T08:02:17-05:00'
 
 dayjs('2019-01-25').format('[YYYY] YYYY-MM-DDTHH:mm:ssZ[Z]') // 'YYYY 2019-01-25T00:00:00-02:00Z'
 
@@ -353,14 +363,6 @@ Devuelve un objeto `Date` nativo, obtenido a partir del objeto `Dayjs`.
 dayjs('2019-01-25').toDate()
 ```
 
-### Como array `.toArray()`
-
-Devuelve un array que reproduce los parámetros de `new Date()`.
-
-```js
-dayjs('2019-01-25').toArray() // [ 2019, 0, 25, 0, 0, 0, 0 ]
-```
-
 ### Como JSON `.toJSON()`
 
 Devuelve un objeto `Dayjs` formateado como una cadena ISO8601.
@@ -375,21 +377,6 @@ Devuelve un objeto `Dayjs` formateado como una cadena ISO8601.
 
 ```js
 dayjs('2019-01-25').toISOString() // '2019-01-25T02:00:00.000Z'
-```
-
-### Como objecto `.toObject()`
-
-Devuelve un dato de tipo `object`, con las propiedades de la fecha.
-
-```js
-dayjs('2019-01-25').toObject()
-/* { years: 2019,
-     months: 0,
-     date: 25,
-     hours: 0,
-     minutes: 0,
-     seconds: 0,
-     milliseconds: 0 } */
 ```
 
 ### Como cadena `.toString()`
@@ -444,6 +431,10 @@ The operator `instanceof` works equally well:
 dayjs() instanceof dayjs // true
 ```
 
+## UTC
+
+If you want to parse or display in UTC, you can use `.utc` `.local` `.isUTC` with plugin [`UTC`](./Plugin.md#utc)
+
 ## API de complementos
 
 ### RelativeTime
@@ -463,6 +454,18 @@ complemento [`IsLeapYear`](./Plugin.md#isleapyear)
 `.week` para obtener la semana del año
 
 complemento [`WeekOfYear`](./Plugin.md#weekofyear)
+
+### WeekDay
+
+`.weekday` to get or set locale aware day of the week
+
+plugin [`WeekDay`](./Plugin.md#weekday)
+
+### IsoWeeksInYear
+
+`.isoWeeksInYear` to get the number of weeks in year
+
+plugin [`IsoWeeksInYear`](./Plugin.md#isoweeksinyear)
 
 ### IsSameOrAfter
 
@@ -487,3 +490,27 @@ complemento [`IsBetween`](./Plugin.md#isbetween)
 `.quarter` to get quarter of the year
 
 plugin [`QuarterOfYear`](./Plugin.md#quarterofyear)
+
+### ToArray
+
+`.toArray` to return an `array` that mirrors the parameters
+
+plugin [`ToArray`](./Plugin.md#toarray)
+
+### ToObject
+
+`.toObject` to return an `object` with the date's properties.
+
+plugin [`ToObject`](./Plugin.md#toobject)
+
+### MinMax
+
+`.min` `.max` to compare given dayjs instances.
+
+plugin [`MinMax`](./Plugin.md#minmax)
+
+### Calendar
+
+`.calendar` to display calendar time
+
+plugin [`Calendar`](./Plugin.md#calendar)

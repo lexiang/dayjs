@@ -2,6 +2,7 @@ import moment from 'moment'
 import MockDate from 'mockdate'
 import dayjs from '../src'
 import th from '../src/locale/th'
+import '../src/locale/ja'
 
 beforeEach(() => {
   MockDate.set(new Date())
@@ -77,12 +78,18 @@ it('Format meridiens a A am / pm', () => {
   expect(dayjs(time).format('a')).toBe(moment(time).format('a'))
   expect(dayjs(time).format('A')).toBe('AM')
   expect(dayjs(time).format('A')).toBe(moment(time).format('A'))
+  expect(dayjs(time).locale('ja').format('a')).toBe('午前')
+  expect(dayjs(time).locale('ja').format('a'))
+    .toBe(moment(time).locale('ja').format('a'))
 
   const time2 = '2018-05-02T23:00:00.000'
   expect(dayjs(time2).format('a')).toBe('pm')
   expect(dayjs(time2).format('a')).toBe(moment(time2).format('a'))
   expect(dayjs(time2).format('A')).toBe('PM')
   expect(dayjs(time2).format('A')).toBe(moment(time2).format('A'))
+  expect(dayjs(time2).locale('ja').format('a')).toBe('午後')
+  expect(dayjs(time2).locale('ja').format('a'))
+    .toBe(moment(time2).locale('ja').format('a'))
 })
 
 it('Format Minute m mm', () => {
@@ -132,13 +139,22 @@ it('Format ddd dd MMM with short locale', () => {
     .format('MMM'))
 })
 
+it('Format token value is 0', () => {
+  const sundayDate = '2000-01-02'
+  const sundayStr = 'd H m s'
+  expect(dayjs(sundayDate).format(sundayStr))
+    .toBe(moment(sundayDate).format(sundayStr))
+})
+
 it('Format Complex with other string - : / ', () => {
   const string = 'YY-M-D / HH:mm:ss'
   expect(dayjs().format(string)).toBe(moment().format(string))
 })
 
 it('Format Escaping characters', () => {
-  const string = '[Z] Z'
+  let string = '[Z] Z'
+  expect(dayjs().format(string)).toBe(moment().format(string))
+  string = '[Z] Z [Z]'
   expect(dayjs().format(string)).toBe(moment().format(string))
 })
 
@@ -230,18 +246,10 @@ it('As Javascript Date -> toDate', () => {
   expect(jsDate.toUTCString()).not.toBe(base.toString())
 })
 
-it('As Array -> toArray', () => {
-  expect(dayjs().toArray()).toEqual(moment().toArray())
-})
-
 it('As JSON -> toJSON', () => {
   expect(dayjs().toJSON()).toBe(moment().toJSON())
 })
 
 it('As ISO 8601 String -> toISOString e.g. 2013-02-04T22:44:30.652Z', () => {
   expect(dayjs().toISOString()).toBe(moment().toISOString())
-})
-
-it('As Object -> toObject', () => {
-  expect(dayjs().toObject()).toEqual(moment().toObject())
 })

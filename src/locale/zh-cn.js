@@ -7,7 +7,14 @@ const locale = {
   weekdaysMin: '日_一_二_三_四_五_六'.split('_'),
   months: '一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月'.split('_'),
   monthsShort: '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split('_'),
-  ordinal: n => `${n}日`,
+  ordinal: (number, period) => {
+    switch (period) {
+      case 'W':
+        return `${number}周`
+      default:
+        return `${number}日`
+    }
+  },
   weekStart: 1,
   formats: {
     LT: 'HH:mm',
@@ -15,7 +22,11 @@ const locale = {
     L: 'YYYY/MM/DD',
     LL: 'YYYY年M月D日',
     LLL: 'YYYY年M月D日Ah点mm分',
-    LLLL: 'YYYY年M月D日ddddAh点mm分'
+    LLLL: 'YYYY年M月D日ddddAh点mm分',
+    l: 'YYYY/M/D',
+    ll: 'YYYY年M月D日',
+    lll: 'YYYY年M月D日 HH:mm',
+    llll: 'YYYY年M月D日dddd HH:mm'
   },
   relativeTime: {
     future: '%s内',
@@ -37,3 +48,4 @@ const locale = {
 dayjs.locale(locale, null, true)
 
 export default locale
+

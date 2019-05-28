@@ -23,6 +23,7 @@ Day.js는 네이티브 `Date.prototype`을 수정하는 대신 `Dayjs` 오브젝
     - [Minute `.minute()`](#minute-minute)
     - [Second `.second()`](#second-second)
     - [Millisecond `.millisecond()`](#millisecond-millisecond)
+    - [Get `.get(unit: string)`](#get-getunit-string)
     - [Set `.set(unit: string, value: number)`](#set-setunit--string--value--number)
   - [Manipulating](#manipulating)
     - [Add `.add(value: number, unit: string)`](#add-addvalue--number--unit--string)
@@ -38,24 +39,16 @@ Day.js는 네이티브 `Date.prototype`을 수정하는 대신 `Dayjs` 오브젝
     - [UTC offset (minutes) `.utcOffset()`](#utc-offset-minutes-utcoffset)
     - [Days in the Month `.daysInMonth()`](#days-in-the-month-daysinmonth)
     - [As Javascript Date `.toDate()`](#as-javascript-date-todate)
-    - [As Array `.toArray()`](#as-array-toarray)
     - [As JSON `.toJSON()`](#as-json-tojson)
     - [As ISO 8601 String `.toISOString()`](#as-iso-8601-string-toisostring)
-    - [As Object `.toObject()`](#as-object-toobject)
     - [As String `.toString()`](#as-string-tostring)
   - [Query](#query)
     - [Is Before `.isBefore(compared: Dayjs, unit?: string)`](#is-before-isbeforecompared--dayjs-unit-string)
     - [Is Same `.isSame(compared: Dayjs, unit?: string)`](#is-same-issamecompared--dayjs-unit-string)
     - [Is After `.isAfter(compared: Dayjs, unit?: string)`](#is-after-isaftercompared--dayjs-unit-string)
     - [Is a Dayjs `.isDayjs()`](#is-a-dayjs-isdayjscompared-any)
+  - [UTC](#utc)
   - [Plugin APIs](#plugin-apis)
-    - [RelativeTime](#relativetime)
-    - [IsLeapYear](#isleapyear)
-    - [WeekOfYear](#weekofyear)
-    - [IsSameOrAfter](#issameorafter)
-    - [IsSameOrBefore](#issameorbefore)
-    - [IsBetween](#isbetween)
-    - [QuarterOfYear](#quarterofyear)
 
 ## Parsing
 
@@ -123,67 +116,97 @@ dayjs().isValid()
 
 ### Year `.year()`
 
-`Dayjs`에서 연도 가져옵니다. 반환 타입은 `number` 입니다.
+Gets or sets the year.
 
 ```js
 dayjs().year()
+dayjs().year(2000)
 ```
 
 ### Month `.month()`
 
-`Dayjs`에서 달을 가져옵니다. 반환 타입은 `number` 입니다.
+Gets or sets the month. Starts at 0
 
 ```js
 dayjs().month()
+dayjs().month(0)
 ```
 
 ### Day of the Month `.date()`
 
-`Dayjs`에서 날짜를 가져옵니다. 반환 타입은 `number` 입니다.
+Gets or sets the day of the month. Starts at 1
 
 ```js
 dayjs().date()
+dayjs().date(1)
 ```
 
 ### Day of the Week `.day()`
 
-`Dayjs`에서 요일을 가져옵니다. 반환 타입은 `number` 입니다.
+Gets or sets the day of the week. Starts on Sunday with 0
 
 ```js
 dayjs().day()
+dayjs().day(0)
 ```
 
 ### Hour `.hour()`
 
-`Dayjs`에서 시를 가져옵니다. 반환 타입은 `number` 입니다.
+Gets or sets the hour.
 
 ```js
 dayjs().hour()
+dayjs().hour(12)
 ```
 
 ### Minute `.minute()`
 
-`Dayjs`에서 분을 가져옵니다. 반환 타입은 `number` 입니다.
+Gets or sets the minute.
 
 ```js
 dayjs().minute()
+dayjs().minute(59)
 ```
 
 ### Second `.second()`
 
-`Dayjs`에서 초를 가져옵니다. 반환 타입은 `number` 입니다.
+Gets or sets the second.
 
 ```js
 dayjs().second()
+dayjs().second(1)
 ```
 
 ### Millisecond `.millisecond()`
 
-`Dayjs`에서 밀리 초를 가져옵니다. 반환 타입은 `number` 입니다.
+Gets or sets the millisecond.
 
 ```js
 dayjs().millisecond()
+dayjs().millisecond(1)
 ```
+
+### Get `.get(unit: string)`
+
+Returns a `number` with information getting from `Dayjs` object
+
+```js
+dayjs().get('month') // start 0
+dayjs().get('day')
+```
+
+#### List of all available units
+
+| Unit          | Shorthand | Description                              |
+| ------------- | --------- | ---------------------------------------- |
+| `date`        |           | Date of Month                            |
+| `day`         | `d`       | Day of Week (Sunday as 0, Saturday as 6) |
+| `month`       | `M`       | Month (January as 0, December as 11)     |
+| `year`        | `y`       | Year                                     |
+| `hour`        | `h`       | Hour                                     |
+| `minute`      | `m`       | Minute                                   |
+| `second`      | `s`       | Second                                   |
+| `millisecond` | `ms`      | Millisecond                              |
 
 ### Set `.set(unit: string, value: number)`
 
@@ -194,19 +217,6 @@ dayjs().set('date', 1)
 dayjs().set('month', 3) // April
 dayjs().set('second', 30)
 ```
-
-#### List of all available units
-
-| Unit          | Shorthand | Description                              |
-| ------------- | --------- | ---------------------------------------- |
-| `date`        |           | Date of Month                            |
-| `day`         | `d`       | Day of Week (Sunday as 0, Saturday as 6) |
-| `month`       | `M`       | Month                                    |
-| `year`        | `y`       | Year                                     |
-| `hour`        | `h`       | Hour                                     |
-| `minute`      | `m`       | Minute                                   |
-| `second`      | `s`       | Second                                   |
-| `millisecond` | `ms`      | Millisecond                              |
 
 ## Manipulating
 
@@ -352,14 +362,6 @@ dayjs('2019-01-25').daysInMonth() // 31
 dayjs('2019-01-25').toDate()
 ```
 
-### As Array `.toArray()`
-
-새로운 `Date()`로부터 매개변수로 입력한 날짜를 가져옵니다. 반환 타입은 `array` 입니다.
-
-```js
-dayjs('2019-01-25').toArray() // [ 2019, 01, 25, 0, 0, 0, 0 ]
-```
-
 ### As JSON `.toJSON()`
 
 ISO8601에 대한 형식으로 `Dayjs`를 출력합니다. 반환 타입은 `string` 입니다.
@@ -374,21 +376,6 @@ ISO8601에 대한 형식으로 `Dayjs`를 출력합니다. 반환 타입은 `str
 
 ```js
 dayjs('2019-01-25').toISOString() // '2019-01-25T02:00:00.000Z'
-```
-
-### As Object `.toObject()`
-
-날짜 속성을 가진 `object` 타입 값으로 반환합니다.
-
-```js
-dayjs('2019-01-25').toObject()
-/* { years: 2019,
-     months: 0,
-     date: 25,
-     hours: 0,
-     minutes: 0,
-     seconds: 0,
-     milliseconds: 0 } */
 ```
 
 ### As String `.toString()`
@@ -443,6 +430,10 @@ The operator `instanceof` works equally well:
 dayjs() instanceof dayjs // true
 ```
 
+## UTC
+
+If you want to parse or display in UTC, you can use `.utc` `.local` `.isUTC` with plugin [`UTC`](./Plugin.md#utc)
+
 ## Plugin APIs
 
 ### RelativeTime
@@ -462,6 +453,18 @@ plugin [`IsLeapYear`](./Plugin.md#isleapyear)
 `.week` to get week of the year
 
 plugin [`WeekOfYear`](./Plugin.md#weekofyear)
+
+### WeekDay
+
+`.weekday` to get or set locale aware day of the week
+
+plugin [`WeekDay`](./Plugin.md#weekday)
+
+### IsoWeeksInYear
+
+`.isoWeeksInYear` to get the number of weeks in year
+
+plugin [`IsoWeeksInYear`](./Plugin.md#isoweeksinyear)
 
 ### IsSameOrAfter
 
@@ -486,3 +489,27 @@ plugin [`IsBetween`](./Plugin.md#isbetween)
 `.quarter` to get quarter of the year
 
 plugin [`QuarterOfYear`](./Plugin.md#quarterofyear)
+
+### ToArray
+
+`.toArray` to return an `array` that mirrors the parameters
+
+plugin [`ToArray`](./Plugin.md#toarray)
+
+### ToObject
+
+`.toObject` to return an `object` with the date's properties.
+
+plugin [`ToObject`](./Plugin.md#toobject)
+
+### MinMax
+
+`.min` `.max` to compare given dayjs instances.
+
+plugin [`MinMax`](./Plugin.md#minmax)
+
+### Calendar
+
+`.calendar` to display calendar time
+
+plugin [`Calendar`](./Plugin.md#calendar)

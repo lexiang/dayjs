@@ -23,8 +23,9 @@ O objeto `Dayjs` é imutável, ou seja, todas as operações da API que alteram 
     - [Minuto `.minute()`](#minuto-minute)
     - [Segundo `.second()`](#segundo-second)
     - [Milissegundo `.millisecond()`](#milissegundo-millisecond)
-    - [Set `.set(unit: string, value: number)`](#set-setunit-string-value-number)
+    - [Get `.get(unit: string)`](#get-getunit-string)
       - [Lista de todas as unidades disponíveis](#lista-de-todas-as-unidades-disponíveis)
+    - [Set `.set(unit: string, value: number)`](#set-setunit-string-value-number)
   - [Manipulando](#manipulando)
     - [Adicionar `.add(value: number, unit: string)`](#adicionar-addvalue-number-unit-string)
     - [Subtrair `.subtract(value: number, unit: string)`](#subtrair-subtractvalue-number-unit-string)
@@ -39,24 +40,16 @@ O objeto `Dayjs` é imutável, ou seja, todas as operações da API que alteram 
     - [UTC offset (minutes) `.utcOffset()`](#utc-offset-minutes-utcoffset)
     - [Dias no Mês `.daysInMonth()`](#dias-no-mês-daysinmonth)
     - [Como objeto `Date` do Javascript `.toDate()`](#como-objeto-date-do-javascript-todate)
-    - [Como Array `.toArray()`](#como-array-toarray)
     - [Como JSON `.toJSON()`](#como-json-tojson)
     - [Como uma string ISO 8601 `.toISOString()`](#como-uma-string-iso-8601-toisostring)
-    - [Como Objeto `.toObject()`](#como-objeto-toobject)
     - [Como String `.toString()`](#como-string-tostring)
   - [Consulta](#consulta)
     - [Antes `.isBefore(compared: Dayjs, unit?: string)`](#antes-isbeforecompared-dayjs-unit-string)
     - [Igual `.isSame(compared: Dayjs, unit?: string)`](#igual-issamecompared-dayjs-unit-string)
     - [Depois `.isAfter(compared: Dayjs, unit?: string)`](#depois-isaftercompared-dayjs-unit-string)
     - [É um objeto `Dayjs` `.isDayjs()`](#é-um-objeto-dayjs-isdayjs)
+  - [UTC](#utc)
   - [Plugin APIs](#plugin-apis)
-    - [RelativeTime](#relativetime)
-    - [IsLeapYear](#isleapyear)
-    - [WeekOfYear](#weekofyear)
-    - [IsSameOrAfter](#issameorafter)
-    - [IsSameOrBefore](#issameorbefore)
-    - [IsBetween](#isbetween)
-    - [QuarterOfYear](#quarterofyear)
 
 ## Conversões
 
@@ -122,67 +115,97 @@ dayjs().isValid()
 
 ### Ano `.year()`
 
-Retorna um `number` representando o ano do objeto `Dayjs`.
+Gets or sets the year.
 
 ```js
 dayjs().year()
+dayjs().year(2000)
 ```
 
 ### Mês `.month()`
 
-Retorna um `number` representando o mês do objeto `Dayjs`.
+Gets or sets the month. Starts at 0
 
 ```js
 dayjs().month()
+dayjs().month(0)
 ```
 
 ### Dia do Mês `.date()`
 
-Retorna um `number` representando o dia do mês do objeto `Dayjs`.
+Gets or sets the day of the month. Starts at 1
 
 ```js
 dayjs().date()
+dayjs().date(1)
 ```
 
 ### Dia da Semana `.day()`
 
-Retorna um `number` representando o dia da semana do objeto `Dayjs`.
+Gets or sets the day of the week. Starts on Sunday with 0
 
 ```js
 dayjs().day()
+dayjs().day(0)
 ```
 
 ### Hora `.hour()`
 
-Retorna um `number` representando a hora do objeto `Dayjs`.
+Gets or sets the hour.
 
 ```js
 dayjs().hour()
+dayjs().hour(12)
 ```
 
 ### Minuto `.minute()`
 
-Retorna um `number` representando os minutos do objeto `Dayjs`.
+Gets or sets the minute.
 
 ```js
 dayjs().minute()
+dayjs().minute(59)
 ```
 
 ### Segundo `.second()`
 
-Retorna um `number` representando os segundos do objeto `Dayjs`.
+Gets or sets the second.
 
 ```js
 dayjs().second()
+dayjs().second(1)
 ```
 
 ### Milissegundo `.millisecond()`
 
-Retorna um `number` representando os milissegundos do objeto `Dayjs`.
+Gets or sets the millisecond.
 
 ```js
 dayjs().millisecond()
+dayjs().millisecond(1)
 ```
+
+### Get `.get(unit: string)`
+
+Returns a `number` with information getting from `Dayjs` object
+
+```js
+dayjs().get('month') // start 0
+dayjs().get('day')
+```
+
+#### Lista de todas as unidades disponíveis
+
+| Unidade       | Shorthand | Descrição                                     |
+| ------------- | --------- | --------------------------------------------- |
+| `date`        |           | Data do Mês                                   |
+| `day`         | `d`       | Dia da Semana (Domingo como 0, Sábado como 6) |
+| `month`       | `M`       | Mês (January as 0, December as 11)            |
+| `year`        | `y`       | Ano                                           |
+| `hour`        | `h`       | Hora                                          |
+| `minute`      | `m`       | Minuto                                        |
+| `second`      | `s`       | Segundo                                       |
+| `millisecond` | `ms`      | Milissegundo                                  |
 
 ### Set `.set(unit: string, value: number)`
 
@@ -193,19 +216,6 @@ dayjs().set('date', 1)
 dayjs().set('month', 3) // April
 dayjs().set('second', 30)
 ```
-
-#### Lista de todas as unidades disponíveis
-
-| Unidade       | Shorthand | Descrição                                     |
-| ------------- | --------- | --------------------------------------------- |
-| `date`        |           | Data do Mês                                   |
-| `day`         | `d`       | Dia da Semana (Domingo como 0, Sábado como 6) |
-| `month`       | `M`       | Mês                                           |
-| `year`        | `y`       | Ano                                           |
-| `hour`        | `h`       | Hora                                          |
-| `minute`      | `m`       | Minuto                                        |
-| `second`      | `s`       | Segundo                                       |
-| `millisecond` | `ms`      | Milissegundo                                  |
 
 ## Manipulando
 
@@ -258,7 +268,7 @@ Retorna uma `string` com um objeto `Dayjs` contendo a data formatada.
 Para escapar caracteres, envolva-os entre colchetes (por exemplo: `[A] [MM]`).
 
 ```js
-dayjs().format() // current date in ISO6801, without fraction seconds e.g. '2020-04-02T08:02:17-05:00'
+dayjs().format() // current date in ISO8601, without fraction seconds e.g. '2020-04-02T08:02:17-05:00'
 
 dayjs('2019-01-25').format('[YYYY] YYYY-MM-DDTHH:mm:ssZ[Z]') // 'YYYY 2019-01-25T00:00:00-02:00Z'
 
@@ -351,14 +361,6 @@ Retorna uma cópia do objeto nativo `Date` convertido de um objeto `Dayjs`.
 dayjs('2019-01-25').toDate()
 ```
 
-### Como Array `.toArray()`
-
-Retorna um `array` que espelha os parâmetros de um new Date().
-
-```js
-dayjs('2019-01-25').toArray() // [ 2019, 0, 25, 0, 0, 0, 0 ]
-```
-
 ### Como JSON `.toJSON()`
 
 Retorna o objeto `Dayjs` formatado em uma `string` ISO8601.
@@ -373,21 +375,6 @@ Retorna o objeto `Dayjs` formatado em uma `string` ISO8601.
 
 ```js
 dayjs('2019-01-25').toISOString() // '2019-01-25T02:00:00.000Z'
-```
-
-### Como Objeto `.toObject()`
-
-Retorna um `object` com as propriedades da data.
-
-```js
-dayjs('2019-01-25').toObject()
-/* { years: 2019,
-     months: 0,
-     date: 25,
-     hours: 0,
-     minutes: 0,
-     seconds: 0,
-     milliseconds: 0 } */
 ```
 
 ### Como String `.toString()`
@@ -442,6 +429,10 @@ The operator `instanceof` works equally well:
 dayjs() instanceof dayjs // true
 ```
 
+## UTC
+
+If you want to parse or display in UTC, you can use `.utc` `.local` `.isUTC` with plugin [`UTC`](./Plugin.md#utc)
+
 ## Plugin APIs
 
 ### RelativeTime
@@ -461,6 +452,18 @@ plugin [`IsLeapYear`](./Plugin.md#isleapyear)
 `.week` para obter a semana do ano
 
 plugin [`WeekOfYear`](./Plugin.md#weekofyear)
+
+### WeekDay
+
+`.weekday` to get or set locale aware day of the week
+
+plugin [`WeekDay`](./Plugin.md#weekday)
+
+### IsoWeeksInYear
+
+`.isoWeeksInYear` to get the number of weeks in year
+
+plugin [`IsoWeeksInYear`](./Plugin.md#isoweeksinyear)
 
 ### IsSameOrAfter
 
@@ -485,3 +488,27 @@ plugin [`IsBetween`](./Plugin.md#isbetween)
 `.quarter` to get quarter of the year
 
 plugin [`QuarterOfYear`](./Plugin.md#quarterofyear)
+
+### ToArray
+
+`.toArray` to return an `array` that mirrors the parameters
+
+plugin [`ToArray`](./Plugin.md#toarray)
+
+### ToObject
+
+`.toObject` to return an `object` with the date's properties.
+
+plugin [`ToObject`](./Plugin.md#toobject)
+
+### MinMax
+
+`.min` `.max` to compare given dayjs instances.
+
+plugin [`MinMax`](./Plugin.md#minmax)
+
+### Calendar
+
+`.calendar` to display calendar time
+
+plugin [`Calendar`](./Plugin.md#calendar)
